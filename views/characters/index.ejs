@@ -1,0 +1,27 @@
+
+    <%  layout('layouts/boilerplate') %> 
+    
+    <h1>Dramatis Personae</h1>
+    
+    
+        <% for (let character of characters) {%> 
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="<%=character.image %>" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%=character.name%></h5>
+                            <p class="card-text"><%=character.faction%>, <%=character.legion%></p>
+                            <p class="card-text">
+                                <small class="text-muted"><%=character.quote%></small>
+                            </p>
+                            <a href="/dramatis-personae/<%=character._id%>  " class="btn btn-primary"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }%> 
+   
+

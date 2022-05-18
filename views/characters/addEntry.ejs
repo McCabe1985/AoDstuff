@@ -1,0 +1,146 @@
+<%  layout('layouts/boilerplate') %> 
+
+    <div class="row">
+        <h1 class="text-center">Create new Entry</h1>
+        <div class="col-6 offset-3">
+            <form action="/dramatis-personae" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Character name</label>
+                    <input type="text" id="name" name="character[name]" placeholder="Enter character name here" required class="form-control">
+                </div>
+            <div class="mb-3">
+                <label for="pointsCostcost" class="form-label">Points cost</label>
+                <input type="number" id="pointsCost" name="character[pointsCost]" placeholder="6" required class="form-control">
+            </div>
+            
+            <div class="mb-3">
+                <label for="image" class="form-label">Character portrait</label>
+                <input type="text" id="image" name="character[image]" value="https://wh40k.lexicanum.com/mediawiki/images/5/52/Unknown.jpg" required class="form-control">
+            </div>
+            
+            <div class="mb-3">
+                <label for="legion" class="form-label">Legion</label>
+                <select name="character[legion]" id="legion" required class="form-control">
+                    <% for (let legion of legions) {%>
+                        <option value="<%=legion%>"><%=legion%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="title" class="form-label">Character title</label>
+                <input type="text" id="title" name="character[title]" placeholder="Planetary Governer, Praetor, chaplain, Legionary etc..." required class="form-control">
+            </div>
+            
+            <div class="mb-3">
+                <label for="faction" class="form-label">Faction</label>
+                <select name="character[faction]" id="faction" required class="form-control">
+                    <% for (let faction of factions) {%>
+                        <option value="<%=faction%>"><%=faction%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="wSkill" class="form-label">Weapon Skill</label>
+                <select name="character[wSkill]" id="wSkill" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="bSkill" class="form-label">Ballistic Skill</label>
+                <select name="character[bSkill]" id="bSkill" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="strength" class="form-label">Strength</label>
+                <select name="character[strength]" id="strength" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="toughness" class="form-label">Toughness</label>
+                <select name="character[toughness]" id="toughness" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="wounds" class="form-label">Wounds</label>
+                <select name="character[wounds]" id="wounds" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="initiative" class="form-label">Initiative</label>
+                <select name="character[initiative]" id="initiative" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+           
+            <div class="mb-3">
+                <label for="attacks" class="form-label">Attacks</label>
+                <select name="character[attacks]" id="attacks" required class="form-control">
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="leadership" class="form-label">Leadership</label>
+                <select name="character[leadership]" id="leadership" required class="form-control"> 
+                    <% for (let stat of statValues) {%>
+                        <option value="<%=stat%>"><%=stat%></option>
+                    <% }%> 
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="savingThrows" class="form-label">Saving Throw(s)</label>
+                <input type="text" id="savingThrows" name="character[savingThrows]" placeholder="5+/6+" required class="form-control">
+            </div>
+           
+            <div class="mb-3">
+                <label for="description" class="form-label">Character Bio</label>
+                <textarea name="character[description]" id="description" cols="30" rows="10" placeholder="Enter your character's bio here" required class="form-control"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="equipment" class="form-label">Equipment</label>
+                <textarea name="character[equipment]" id="equipment" cols="30" rows="10" placeholder="List your character's equipment here" required class="form-control"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="specialRules" class="form-label">Special Rules</label>
+                <textarea name="character[specialRules]" id="specialRules" cols="30" rows="10" placeholder="List your character's special rules here" required class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="quote" class="form-label">Character quote</label>
+                <input type="text" id="quote" name="character[quote]" placeholder="Enter quote here" required class="form-control">
+            </div>
+            <div class="mb-3">
+                
+                <button type="submit" class="btn btn-success">Add Entry</button>
+            </div>
+            </form>
+        </div>
+    
+    </div>

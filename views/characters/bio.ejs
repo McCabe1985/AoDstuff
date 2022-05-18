@@ -1,0 +1,66 @@
+<%  layout('layouts/boilerplate') %> 
+
+  
+
+<div class="row col-8 offset-4">
+    <h1 class="text-center"><%=character.name%></h1>
+    <div class="col-8 offset-3">
+        <div class="card" style="width: 18rem;">
+            <img src="<%=character.image%>" class="card-img-top" alt="<%=character.name%>">
+            <div class="card-body">
+              <h5 class="card-title"><%=character.name%></h5>
+              <p class="card-text"><%=character.quote%></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><%=character.faction%></li>
+                <li class="list-group-item"><%=character.legion%></li>
+                <li class="list-group-item"><%=character.title%></li>
+            </ul>
+            <div class="card-body">
+                <table class="table">
+                    <colgroup span="9"></colgroup>
+                    <tr class="bg-dark text-white">
+                        <td>WS</td>
+                        <td>BS</td>
+                        <td>S</td>
+                        <td>T</td>
+                        <td>W</td>
+                        <td>I</td>
+                        <td>A</td>
+                        <td>LD</td>
+                        <td>SV+</td>
+                        <td>Points</td>
+                    </tr>
+                    <tr>
+                        <td ><%=character.wSkill%></td>
+                        <td><%=character.bSkill%></td>
+                        <td><%=character.strength%></td>
+                        <td><%=character.toughness%></td>
+                        <td><%=character.wounds%></td>
+                        <td><%=character.initiative%></td>
+                        <td><%=character.attacks%></td>
+                        <td><%=character.leadership%></td>
+                        <td><%=character.savingThrows%></td>
+                        <td><%=character.pointsCost%></td>
+                    </tr> 
+            </table>
+            <h2><%=character.name%> Biography</h2>
+            <p><%=character.description%></p>
+            <h3>Equipment</h3>
+            <p><%=character.equipment%></p>
+            <h3>Special Rules</h3>
+            <p><%=character.specialRules%></p>
+              <a href="/dramatis-personae/<%=character._id%>/edit" class="card-link">Edit</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
+          </div>
+    </div>
+</div>
+    
+
+    <p>
+        <form action="/dramatis-personae/<%=character._id%>?_method=DELETE" method="POST">
+            <button>DELETE ENTRY</button>
+        </form>
+        
+    </p>
