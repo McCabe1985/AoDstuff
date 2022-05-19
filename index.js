@@ -4,6 +4,8 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const engine = require('ejs-mate');
+const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Character = require('./models/character');
 
@@ -58,19 +60,19 @@ const factions = [
     'Goibhniu Principalities'
 ]
 
-    const statValues = [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10'
-    ]
+const statValues = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10'
+]
 
 //middleware
 app.engine('ejs', engine);
@@ -89,12 +91,12 @@ app.get('/', (req, res) => {
 })
 
 //view character index
-app.get('/dramatis-personae', async (req, res) => {
+app.get('/dramatis-personae', catchAsync(async (req, res) => {
     const characters = await Character.find({});
     res.render('characters/index', {
         characters
     })
-})
+}))
 
 //create new character entry
 app.get('/dramatis-personae/new', (req, res) => {
@@ -105,22 +107,23 @@ app.get('/dramatis-personae/new', (req, res) => {
     })
 })
 
-app.post('/dramatis-personae', async (req, res) => {
-    const character = new Character(req.body.character);
-    await character.save();
-    res.redirect(`/dramatis-personae/${character._id}`)
-})
+app.post('/dramatis-personae', catchAsync(async (req, res) => {
+    if(!req.body.character) throw new ExpressError('Invalid Character Input', 400)
+        const character = new Character(req.body.character);
+        await character.save();
+        res.redirect(`/dramatis-personae/${character._id}`)
+}))
 
 //view character bio
-app.get('/dramatis-personae/:id', async (req, res) => {
+app.get('/dramatis-personae/:id', catchAsync(async (req, res) => {
     const character = await Character.findById(req.params.id)
     res.render('characters/bio', {
         character
     })
-})
+}))
 
 //Edit Entry
-app.get('/dramatis-personae/:id/edit', async (req, res) => {
+app.get('/dramatis-personae/:id/edit', catchAsync(async (req, res) => {
     const character = await Character.findById(req.params.id)
     res.render('characters/edit', {
         character,
@@ -128,23 +131,38 @@ app.get('/dramatis-personae/:id/edit', async (req, res) => {
         factions,
         statValues
     })
-})
+}))
 
-app.put('/dramatis-personae/:id', async (req,res) =>{
-    const { id } = req.params;
-    const character = await Character.findByIdAndUpdate(id, {...req.body.character})
+app.put('/dramatis-personae/:id', catchAsync(async (req, res) => {
+    const {
+        id
+    } = req.params;
+    const character = await Character.findByIdAndUpdate(id, {
+        ...req.body.character
+    })
     res.redirect(`/dramatis-personae/${character._id}`)
-})
+}))
 
 
 //delete entry
-app.delete('/dramatis-personae/:id', async (req, res) =>{
-    const { id } = req.params;
+app.delete('/dramatis-personae/:id', catchAsync(async (req, res) => {
+    const {
+        id
+    } = req.params;
     await Character.findByIdAndDelete(id)
     res.redirect('/dramatis-personae');
+}))
+
+//error handler
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
 })
 
-
+app.use((err, req, res, next) => {
+    const {statusCode = 500} = err;
+    if(!err.message) err.message = 'Internal Server Error';
+    res.status(statusCode).render('error', { err })
+})
 
 //create the server
 app.listen(3000, () => {
