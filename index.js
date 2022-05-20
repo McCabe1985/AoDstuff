@@ -4,6 +4,10 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const engine = require('ejs-mate');
+const Joi = require('joi');
+const {
+    characterSchema
+} = require('./utils/schemaValidators')
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -83,6 +87,19 @@ app.use(express.urlencoded({
 }));
 app.use(methodOverride('_method'));
 
+//schema validation
+const validateCharacter = (req, res, next) => {
+    const {
+        error
+    } = characterSchema.validate(req.body);
+    if (error) {
+        const errMsg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(errMsg, 400)
+    } else {
+        next()
+    }
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< routes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //basic route
@@ -107,11 +124,11 @@ app.get('/dramatis-personae/new', (req, res) => {
     })
 })
 
-app.post('/dramatis-personae', catchAsync(async (req, res) => {
-    if(!req.body.character) throw new ExpressError('Invalid Character Input', 400)
-        const character = new Character(req.body.character);
-        await character.save();
-        res.redirect(`/dramatis-personae/${character._id}`)
+app.post('/dramatis-personae', validateCharacter, catchAsync(async (req, res) => {
+    //if(!req.body.character) throw new ExpressError('Invalid Character Input', 400)
+    const character = new Character(req.body.character);
+    await character.save();
+    res.redirect(`/dramatis-personae/${character._id}`)
 }))
 
 //view character bio
@@ -133,7 +150,7 @@ app.get('/dramatis-personae/:id/edit', catchAsync(async (req, res) => {
     })
 }))
 
-app.put('/dramatis-personae/:id', catchAsync(async (req, res) => {
+app.put('/dramatis-personae/:id', validateCharacter, catchAsync(async (req, res) => {
     const {
         id
     } = req.params;
@@ -159,9 +176,13 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    const {statusCode = 500} = err;
-    if(!err.message) err.message = 'Internal Server Error';
-    res.status(statusCode).render('error', { err })
+    const {
+        statusCode = 500
+    } = err;
+    if (!err.message) err.message = 'Internal Server Error';
+    res.status(statusCode).render('error', {
+        err
+    })
 })
 
 //create the server
